@@ -43,7 +43,12 @@ jobs:
             git fetch --all &&
             git reset --hard origin/main &&
             git pull origin main &&
-            cd frontend-website &&
+            cd react-widget &&
+            echo "--- Installing react-widget dependencies" &&
+            npm install &&
+            echo "--- Building react-widget" &&
+            npm run build &&
+            cd ../frontend-website &&
             echo "--- Installing frontend-website dependencies" &&
             npm install &&
             echo "--- Building frontend-website" &&
