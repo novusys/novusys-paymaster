@@ -33,10 +33,10 @@ export default function Home() {
       title: "Uniswap",
       logo: "/logos/exchanges/uniswap.png",
       tag: "unis",
-    }
-  ]
+    },
+  ];
 
-  const [integrationState, setIntegrationState] = useState(buttons[0])
+  const [integrationState, setIntegrationState] = useState(buttons[0]);
 
   return (
     <>
@@ -51,30 +51,36 @@ export default function Home() {
         <Features />
         <LargeGap/>
         <Description/> */}
-        <div className={styles['page__content__container']}>
-          <div className={styles['integration__selector']}>
-            {buttons.map((btn: any, index: any)=>{
+        <div className={styles["page__content__container"]}>
+          <div className={styles["integration__selector"]}>
+            {buttons.map((btn: any, index: any) => {
               return (
-                <div className={styles[integrationState.tag == btn.tag ?  'integration__button__selected':'integration__button']} key={index} onClick = {()=>{setIntegrationState(btn)}}>
-                  <img src={btn.logo}/> {btn.title}
+                <div
+                  className={styles[integrationState.tag == btn.tag ? "integration__button__selected" : "integration__button"]}
+                  key={index}
+                  onClick={() => {
+                    setIntegrationState(btn);
+                  }}
+                >
+                  <img src={btn.logo} /> {btn.title}
                 </div>
-              )
+              );
             })}
-          
           </div>
 
-            <IntegrationLayout>
-              {
-                integrationState.tag == "mint"?
-                <MintNft/> : integrationState.tag == "inch" ? <OneInch/> : integrationState.tag == "aave" ? <Aave/> : <Uniswap/>
-              }
-              
-            </IntegrationLayout>
-          </div>
-          
-
+          <IntegrationLayout>
+            {integrationState.tag == "mint" ? (
+              <MintNft />
+            ) : integrationState.tag == "inch" ? (
+              <OneInch />
+            ) : integrationState.tag == "aave" ? (
+              <Aave />
+            ) : (
+              <Uniswap />
+            )}
+          </IntegrationLayout>
+        </div>
       </PageLayout>
-      hello world
     </>
   );
 }

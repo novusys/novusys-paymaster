@@ -1,37 +1,35 @@
-.out__container{
-    width: 100%;
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
+.out__container {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
 }
 
-.integration__setup{
-    width: max-content;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.integration__setup {
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.wallet__widget{
-    outline: black solid 3px;
-    width: 520px;
-    height: 580px;
+.wallet__widget {
+  width: 520px;
+  height: 580px;
 }
 
-.integration__title{
-    font-size: 50px;
-    font-weight: bold;
+.integration__title {
+  font-size: 50px;
+  font-weight: bold;
 }
 
-.integration__price{
-    font-size: 20px;
-    font-weight: bold;
+.integration__price {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.integration__image{
-    img {
-        width: 30vw;
-        max-width: 500px;
-    }
-    
+.integration__image {
+  img {
+    width: 30vw;
+    max-width: 500px;
+  }
 }
