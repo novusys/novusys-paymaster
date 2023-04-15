@@ -26,7 +26,7 @@ export const useAAInterface = () => {
     entryPoint: string,
     factoryAddress: string,
     sender: string,
-    timeout = 30000,
+    timeout = 60000,
     interval = 5000
   ) => {
     const sw = new SimpleAccountAPI({
@@ -106,7 +106,7 @@ export const useAAInterface = () => {
 
         console.log(op);
         const uoHash = await client.sendUserOpToBundler(op);
-        console.log(uoHash);
+        console.log("uoHash ", uoHash);
         callback(await getUserOpReceipt(uoHash, providerRpc, entryPoint, factory, op.sender));
       })
       .catch(function (error) {

@@ -36,6 +36,7 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
   const [loginChange, setLoginChange] = useState(false);
   const [finalTotal, setTotal] = useState("...");
   const [usdTotal, setUSDTotal] = useState("...");
+  const [usdConversion, setConversion] = useState(1);
 
   // Sig is generated in TxnPending
   const body = {
@@ -65,16 +66,21 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
     };
 
     const getUSDConversion = async (total: any, symbol: string) => {
-      //   let options = {
-      //     amount: total.toString(),
-      //     symbol: symbol,
-      //     convert: "USD",
-      //   };
-      //   let queryString = new URLSearchParams(options).toString();
-      //   const res = axios.get(`https://pro-api.coinmarketcap.com/v2/tools/price-conversion?${queryString}`, {
-      //     headers: { Accept: "text/plain", "X-CMC_PRO_API_KEY": process.env.COINMARKET },
-      //   });
-      //   return res;
+      try {
+        const res = await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+        if (res) {
+          let data = res.data;
+          if (data) {
+            let price = data.ethereum.usd;
+            setConversion(price);
+            return price * total;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      return null;
     };
 
     if (user && isAuthenticated) {
@@ -100,8 +106,12 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
             setTotal(`${total} ${props.chain}`);
 
             // Convert to USD
-            setUSDTotal("25");
-            // getUSDConversion(total, props.chain)
+            getUSDConversion(total, props.chain).then((res) => {
+              if (res) {
+                setUSDTotal(res.toFixed(2));
+              }
+            });
+
             //   .then((res) => {
             //     console.log(res);
             //   })
@@ -159,11 +169,9 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
     } else if (page == "stripe") {
       return <StripeContainer title="Pay with Stripe" amount={usdTotal} user={user} />;
     } else if (page == "txn_pending_stripe") {
-      return <TxnPending body={body} method="Stripe Transaction" />;
+      return <TxnPending {...props} body={body} method="Stripe Transaction" usdPrice={usdConversion} />;
     } else if (page == "txn_pending_erc20") {
-      return <TxnPending body={body} method="ERC-20 Transaction" />;
-    } else if (page == "receipt_stripe") {
-      return <Receipt method="Stripe Transaction" receipt={{}} {...props} />;
+      return <TxnPending {...props} body={body} method="ERC-20 Transaction" usdPrice={usdConversion} />;
     } else {
       return (
         <div className={styles["main__container"]}>
@@ -202,7 +210,7 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
 
               <div className={styles["inner__cost__container"]}>
                 <div className={styles["detail__title"]}>{"Estimated Cost (USD):"}</div>
-                <div className={styles["detail__input"]}>...</div>
+                <div className={styles["detail__input"]}>{`~$${usdTotal}`}</div>
               </div>
             </div>
           </div>
@@ -211,7 +219,7 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
               <div className={styles["payment__container"]}>
                 <button
                   onClick={() => {
-                    setPage("txn_pending_stripe");
+                    setPage("stripe");
                   }}
                   className={styles["payment__button"]}
                 >

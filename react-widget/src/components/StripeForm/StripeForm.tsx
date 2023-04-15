@@ -101,6 +101,7 @@ const StripeForm: React.FC<StripeFormProps> = (props: StripeFormProps) => {
     if (error) {
       console.log(error);
       setMessage(error.message || "Error with card validation");
+      return;
     }
 
     setIsProcessing(false);

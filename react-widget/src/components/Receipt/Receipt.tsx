@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./Receipt.module.scss";
 import { PageCtx } from "../Widget/Widget";
 import Header from "../Header/Header";
+import axios from "axios";
 
 interface ReceiptProps {
   method: string;
@@ -9,15 +10,18 @@ interface ReceiptProps {
   function: string;
   total: string;
   chain: string;
-  receipt: any;
+  gas: string;
+  hash: string;
+  usdPrice: number;
 }
 
 const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
   const { page, setPage } = useContext(PageCtx);
+  const [usdTotal, setUSDTotal] = useState("...");
 
-  const gas = "...";
-  const finalTotal = "...";
-  const txnHash = "...";
+  useEffect(() => {
+    setUSDTotal(((parseFloat(props.gas) + parseFloat(props.total)) * props.usdPrice).toFixed(2));
+  }, []);
 
   const renderPage = () => {
     return (
@@ -28,7 +32,7 @@ const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
           <div className={styles["detail__container"]}>
             <div className={styles["detail__title"]}>{"Contract Address:"}</div>
             <div className={styles["detail__input"]}>
-              {props.address.slice(0, 6) + "..." + props.address.slice(props.address.length - 5)}
+              {props.address.slice(0, 6) + "..." + props.address.slice(props.address.length - 4)}
             </div>
           </div>
           <div className={styles["detail__container"]}>
@@ -37,7 +41,7 @@ const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
           </div>
           <div className={styles["detail__container"]}>
             <div className={styles["detail__title"]}>{"Transaction Hash:"}</div>
-            <div className={styles["detail__input"]}>{txnHash}</div>
+            <div className={styles["detail__input"]}>{props.hash.slice(0, 6) + "..." + props.hash.slice(props.hash.length - 4)}</div>
           </div>
 
           <div className={styles["cost__container"]}>
@@ -47,7 +51,7 @@ const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
             </div>
             <div className={styles["inner__cost__container"]}>
               <div className={styles["detail__title"]}>{"Gas Spent:"}</div>
-              <div className={styles["detail__input"]}>{gas}</div>
+              <div className={styles["detail__input"]}>{props.gas.slice(0, 6)} ETH</div>
             </div>
 
             <div className={styles["cost__spacer"]}>
@@ -56,12 +60,14 @@ const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
 
             <div className={styles["inner__cost__container"]}>
               <div className={styles["detail__title"]}>{`Total Cost (${props.chain}):`}</div>
-              <div className={styles["detail__input"]}>{finalTotal}</div>
+              <div className={styles["detail__input"]}>
+                {(parseFloat(props.gas) + parseFloat(props.total)).toString().slice(0, 6)} ETH
+              </div>
             </div>
 
             <div className={styles["inner__cost__container"]}>
               <div className={styles["detail__title"]}>{"Total Cost (USD):"}</div>
-              <div className={styles["detail__input"]}>...</div>
+              <div className={styles["detail__input"]}>{`~$${usdTotal}`}</div>
             </div>
 
             {/* Card info if Stripe else ERC-20 token  */}

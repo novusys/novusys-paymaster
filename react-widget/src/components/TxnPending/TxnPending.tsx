@@ -6,30 +6,53 @@ import Header from "../Header/Header";
 import { useAAInterface } from "@/api/aaInterface";
 import { ethers } from "ethers";
 import { useConfig } from "@/api/config";
+import Receipt from "../Receipt/Receipt";
+import Pending from "../LoadSpin/Pending";
 
 interface TxnPendingProps {
+  address: string;
+  function: string;
+  total: string;
+  chain: string;
   body: any;
   method: string;
+  usdPrice: number;
 }
 const TxnPending: React.FC<TxnPendingProps> = (props: TxnPendingProps) => {
   const { page, setPage } = useContext(PageCtx);
   const { currUser, setCurrUser } = useContext(UserCtx);
-  const [confirmed, setConfirmed] = useState(false);
+  const [statusTitle, setTitle] = useState("Transaction Pending");
   const [status, setStatus] = useState("pending");
-  const [transaction, setTransaction] = useState({});
+  const [showLoading, setShowLoading] = useState(false);
+  const [showReceipt, setShowReceipt] = useState(false);
+  const [gasFee, setGasFee] = useState("...");
   const [txnHash, setHash] = useState("...");
   const cid = props.body.cid;
 
   const { sendTxn, waitTransaction } = useAAInterface();
   const { chains } = useConfig();
 
-  const handleReceipt = () => {
-    if (page == "txn_pending_stripe") {
-      setPage("receipt_stripe");
-    } else {
-      setPage("receipt_erc20");
+  const handleReceipt = async () => {
+    setShowLoading(true);
+    const receipt = await provider.getTransactionReceipt(txnHash);
+    const txn = await provider.getTransaction(txnHash);
+    console.log("RECEIPT ", receipt);
+    console.log("TXN ", txn);
+    if (receipt) {
+      let gasUsed = BigInt(receipt.gasUsed._hex).toString();
+      // @ts-ignore
+      let gasPrice = BigInt(txn.gasPrice._hex).toString();
+      let fee = (parseFloat(gasUsed) * parseFloat(gasPrice)) / 10 ** 18;
+      console.log("Gas Used: ", gasUsed);
+      console.log("Gas Price: ", gasPrice);
+      console.log("Fee: ", fee);
+      setGasFee(fee.toString());
+      setShowLoading(false);
+      setShowReceipt(true);
     }
   };
+
+  const provider = new ethers.providers.JsonRpcProvider(chains[cid].bundler);
 
   const txn = () => {
     console.log("Sending txn ", props.body);
@@ -47,16 +70,17 @@ const TxnPending: React.FC<TxnPendingProps> = (props: TxnPendingProps) => {
       (tx: string) => {
         console.log("TRANSACTION RECEIVED ", tx);
         if (tx != null) {
-          setTransaction(tx);
-          waitTransaction(tx, new ethers.providers.JsonRpcProvider(chains[cid].bundler), (r: any) => {
+          setHash(tx);
+          waitTransaction(tx, provider, (r: any) => {
             if (r) {
               setStatus("success");
+              setTitle("Transaction Confirmed");
               // approveSigs();
             } else {
               setStatus("fail");
+              setTitle("Transaction Failed");
             }
           });
-          setStatus("launching");
         }
       },
       new ethers.providers.JsonRpcProvider(chains[cid].bundler),
@@ -80,19 +104,27 @@ const TxnPending: React.FC<TxnPendingProps> = (props: TxnPendingProps) => {
   }, [status]);
 
   const renderPage = () => {
-    return (
-      <div className={styles["main__container"]}>
-        <Header title={props.method} />
-        <div className={styles["txn__title"]}>Transaction Pending</div>
-        <div className={styles["txn__subtitle"]}>Transaction Hash: {txnHash}</div>
-        <div className={styles["txn__loader"]}>Loading...</div>
-        {!confirmed && (
-          <button onClick={() => handleReceipt()} className={styles["action__button"]}>
-            View Receipt
-          </button>
-        )}
-      </div>
-    );
+    if (showLoading) {
+      return <Pending />;
+    } else if (showReceipt) {
+      return <Receipt {...props} gas={gasFee} hash={txnHash} usdPrice={props.usdPrice} />;
+    } else {
+      return (
+        <div className={styles["main__container"]}>
+          <Header title={props.method} />
+          <div className={styles["txn__title"]}>{statusTitle}</div>
+          <div className={styles["txn__subtitle"]}>
+            Transaction Hash: {txnHash.slice(0, 6) + "..." + txnHash.slice(txnHash.length - 4)}
+          </div>
+          <div className={styles["txn__loader"]}>Loading...</div>
+          {status == "success" && (
+            <button onClick={() => handleReceipt()} className={styles["action__button"]}>
+              View Receipt
+            </button>
+          )}
+        </div>
+      );
+    }
   };
 
   return renderPage();
