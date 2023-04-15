@@ -5,6 +5,13 @@ import Widget from "@/components/Widget/Widget";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const example = {
+  address: "0xc0f70D98eC6aD9767d49341dB57674F1E2305B87",
+  function: "mint",
+  total: "0.01",
+  chain: "ETH",
+};
+
 export default function Home() {
   return (
     <div className={styles["main__container"]}>
@@ -14,7 +21,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Widget />
+      <Widget {...example} />
     </div>
   );
 }

@@ -20,7 +20,7 @@
 
 .detail__container {
   margin-top: 10px;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   display: flex;
   flex-direction: row;
 }
@@ -28,32 +28,6 @@
 .detail__title {
   font-weight: 700;
   margin-right: 10px;
-}
-
-.button__container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.action__button {
-  height: 70px;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: black;
-  padding: 10px 30px 10px 30px;
-  margin-bottom: 40px;
-  background-color: transparent;
-  border: 3px solid black;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  box-shadow: 3px 4px;
-}
-
-.action__button:hover {
-  box-shadow: none;
 }
 
 .payment__container {

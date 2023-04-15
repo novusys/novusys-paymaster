@@ -16,6 +16,45 @@
 
 .title {
   color: black;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  height: 50px;
+  width: auto;
+  border-radius: 100%;
+  margin-left: 10px;
+}
+
+.icon__normal {
+  height: 40px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.title__container {
+  display: flex;
+  width: fit-content;
+  flex-direction: row;
+}
+
+.button {
+  cursor: pointer;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
+  padding: 5px 10px 5px 10px;
+  border-radius: 10px;
+}
+
+.action__detail {
+  color: black;
 }

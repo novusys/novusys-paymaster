@@ -1,0 +1,24 @@
+.form__wrapper {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.action__button {
+  height: 60px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: black;
+  padding: 10px 30px 10px 30px;
+  margin: 30px 0 0 0;
+  background-color: transparent;
+  border: 3px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 3px 4px;
+}
+
+.action__button:hover {
+  box-shadow: none;
+}
