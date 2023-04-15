@@ -7,6 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import AuthSplash from "../AuthSplash/AuthSplash";
 
 interface WidgetProps {
+  req: any;
   address: string;
   function: string;
   total: string;

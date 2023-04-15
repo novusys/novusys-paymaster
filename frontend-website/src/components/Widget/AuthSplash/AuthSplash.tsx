@@ -19,6 +19,7 @@ import { PageCtx } from "../Widget/Widget";
 // const alchemy = new Alchemy(config);
 
 interface AuthSplashProps {
+  req: any;
   address: string;
   function: string;
   total: string;
@@ -37,18 +38,6 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
   const [finalTotal, setTotal] = useState("...");
   const [usdTotal, setUSDTotal] = useState("...");
   const [usdConversion, setConversion] = useState(1);
-
-  // Sig is generated in TxnPending
-  const body = {
-    cid: 5,
-    target: props.address,
-    value: ethers.utils.parseEther(props.total)._hex,
-    data: "0x",
-    provider: "https://node.stackup.sh/v1/rpc/9bf24b7d46a1e044c3244088dfe8dee6c87bb2399278bbb3c3f9935c00451f4e",
-    epAddr: "0x0576a174D229E3cFA37253523E645A78A0C91B57",
-    factoryAddr: "0x2bC52aEd814Ee695c9FD7B7EB4F8B9821E710ceF",
-    withPm: true,
-  };
 
   useEffect(() => {
     const fetchAccessToken = async () => {
@@ -169,9 +158,9 @@ const AuthSplash: React.FC<AuthSplashProps> = (props: AuthSplashProps) => {
     } else if (page == "stripe") {
       return <StripeContainer title="Pay with Stripe" amount={usdTotal} user={user} />;
     } else if (page == "txn_pending_stripe") {
-      return <TxnPending {...props} body={body} method="Stripe Transaction" usdPrice={usdConversion} />;
+      return <TxnPending {...props} body={props.req} method="Stripe Transaction" usdPrice={usdConversion} />;
     } else if (page == "txn_pending_erc20") {
-      return <TxnPending {...props} body={body} method="ERC-20 Transaction" usdPrice={usdConversion} />;
+      return <TxnPending {...props} body={props.req} method="ERC-20 Transaction" usdPrice={usdConversion} />;
     } else {
       return (
         <div className={styles["main__container"]}>

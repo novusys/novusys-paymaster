@@ -6,8 +6,21 @@ import DarkMode from "@material-design-icons/svg/outlined/dark_mode.svg";
 import LightMode from "@material-design-icons/svg/outlined/light_mode.svg";
 import { useEffect, useState } from "react";
 import Widget from "@/components/Widget/Widget/Widget";
+import { ethers } from "ethers";
 
 const MintNft: React.FC = () => {
+  const address = "0xc0f70D98eC6aD9767d49341dB57674F1E2305B87";
+
+  const body = {
+    cid: 5,
+    target: address,
+    value: ethers.utils.parseEther("0.01")._hex,
+    data: "0x",
+    provider: "https://node.stackup.sh/v1/rpc/9bf24b7d46a1e044c3244088dfe8dee6c87bb2399278bbb3c3f9935c00451f4e",
+    epAddr: "0x0576a174D229E3cFA37253523E645A78A0C91B57",
+    factoryAddr: "0x2bC52aEd814Ee695c9FD7B7EB4F8B9821E710ceF",
+    withPm: true,
+  };
   return (
     <div className={styles["out__container"]}>
       <div className={styles["integration__setup"]}>
@@ -20,12 +33,7 @@ const MintNft: React.FC = () => {
         </div>
       </div>
       <div className={styles["wallet__widget"]}>
-        <Widget
-          address={"0x7494e19a3d2b44eb0c711d60163b81fd3e110415723ee9cfd7f20560212d47b9"}
-          function="mint"
-          total="0.01"
-          chain="ETH"
-        />
+        <Widget req={body} address={address} function="mint" total="0.01" chain="ETH" />
       </div>
     </div>
   );
