@@ -1,11 +1,38 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Home.module.scss";
+import PageLayout from "@/layouts/PageLayout/PageLayout";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const buttons = [
+    {
+      title: "Mint NFT",
+      logo: "/logos/exchanges/mint.png",
+      tag: "mint",
+    },
+    {
+      title: "1inch",
+      logo: "/logos/exchanges/1inch.png",
+      tag: "inch",
+    },
+    {
+      title: "AAVE",
+      logo: "/logos/exchanges/aave.png",
+      tag: "aave",
+    },
+    {
+      title: "Uniswap",
+      logo: "/logos/exchanges/uniswap.png",
+      tag: "unis",
+    }
+  ]
+
+  const [integrationState, setIntegrationState] = useState(buttons[0])
+
   return (
     <>
       <Head>
@@ -14,6 +41,30 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <PageLayout>
+        {/* <LandingBanner />
+        <Features />
+        <LargeGap/>
+        <Description/> */}
+        <div className={styles['page__content__container']}>
+          <div className={styles['integration__selector']}>
+            {buttons.map((btn: any, index: any)=>{
+              return (
+                <div className={styles[integrationState.tag == btn.tag ?  'integration__button__selected':'integration__button']} key={index} onClick = {()=>{setIntegrationState(btn)}}>
+                  <img src={btn.logo}/> {btn.title}
+                </div>
+              )
+            })}
+          
+          </div>
+
+          <div className={styles['integration__container']}>
+
+          </div>
+          
+        </div>
+
+      </PageLayout>
       hello world
     </>
   );
