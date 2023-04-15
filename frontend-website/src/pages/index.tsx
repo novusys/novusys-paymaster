@@ -4,6 +4,11 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.scss";
 import PageLayout from "@/layouts/PageLayout/PageLayout";
 import { useState } from "react";
+import IntegrationLayout from "@/layouts/IntegrationLayout/IntegrationLayout";
+import MintNft from "@/components/integrations/MintNft/MintNft";
+import OneInch from "@/components/integrations/1inch/OneInch";
+import Aave from "@/components/integrations/Aave/Aave";
+import Uniswap from "@/components/integrations/Uniswap/Uniswap";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,11 +63,15 @@ export default function Home() {
           
           </div>
 
-          <div className={styles['integration__container']}>
-
+            <IntegrationLayout>
+              {
+                integrationState.tag == "mint"?
+                <MintNft/> : integrationState.tag == "inch" ? <OneInch/> : integrationState.tag == "aave" ? <Aave/> : <Uniswap/>
+              }
+              
+            </IntegrationLayout>
           </div>
           
-        </div>
 
       </PageLayout>
       hello world

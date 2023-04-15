@@ -1,0 +1,20 @@
+.dropdown {
+    select {
+      appearance: none;
+      background-color: white;
+      border: 2px solid black;
+      color: black;
+      font-size: 1rem;
+      padding: 0.5rem;
+      width: 100%;
+  
+      &:hover {
+        cursor: pointer;
+      }
+  
+      option {
+        color: black;
+      }
+    }
+  }
+  
