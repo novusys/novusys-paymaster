@@ -1,0 +1,60 @@
+name: Deploy Novusys Paymaster
+
+concurrency: deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+          
+#      - name: Install and build
+#        run: |
+#          cd frontend-website
+#          npm install
+#          npm run build --if-present
+
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: "${{ secrets.NOVUSYS_PAYMASTER_PRIVATE_KEY }}"
+            HOSTNAME : ${{ secrets.NOVUSYS_PAYMASTER_HOSTNAME }}
+            USER_NAME : ${{ secrets.NOVUSYS_PAYMASTER_USERNAME }}
+            FRONTEND_WEBSITE_ENV : ${{ secrets.NOVUSYS_PAYMASTER_FRONTEND_WEBSITE_ENV }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem && 
+          chmod 600 private_key.pem &&
+          echo "$FRONTEND_WEBSITE_ENV" > frontend-website.env &&
+          scp -o StrictHostKeyChecking=no -i private_key.pem frontend-website.env ${USER_NAME}@${HOSTNAME}:development/novusys-paymaster/frontend-website/.env &&
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${USER_NAME}@${HOSTNAME} '
+            cd development/novusys-paymaster &&
+            export NVM_DIR=~/.nvm &&
+            source ~/.nvm/nvm.sh &&
+            git checkout main &&
+            git fetch --all &&
+            git reset --hard origin/main &&
+            git pull origin main &&
+            cd frontend-website &&
+            echo "--- Installing frontend-website dependencies" &&
+            npm install &&
+            echo "--- Building frontend-website" &&
+            npm run build &&
+            echo "--- Terminating Node.js" &&
+            killall -q node || true &&
+            cd ../backend &&
+            echo "--- Starting backend" &&
+            (nohup npm run start:dev > ~/novusys.log 2> ~/novusys.err < /dev/null &) &&
+            cd ../frontend-website &&
+            echo "--- Starting frontend-website" &&
+            sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000 &&
+            (nohup npm run start > ~/novusys-front-end.log 2> ~/novusys-front-end.err < /dev/null &)
+          '
