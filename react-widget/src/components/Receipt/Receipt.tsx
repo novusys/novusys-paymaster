@@ -64,6 +64,7 @@ const Receipt: React.FC<ReceiptProps> = (props: ReceiptProps) => {
               <div className={styles["detail__input"]}>...</div>
             </div>
 
+            {/* Card info if Stripe else ERC-20 token  */}
             <div className={styles["inner__cost__container"]}>
               <div className={styles["detail__title"]}>{"Paid for with:"}</div>
               <div className={styles["detail__input"]}>...</div>

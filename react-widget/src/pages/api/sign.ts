@@ -23,7 +23,7 @@ async function handle(req, res) {
       method: "POST",
       url: "https://dev-27jeufvx256r244q.us.auth0.com/oauth/token",
       headers: { "content-type": "application/json" },
-      body: `{"client_id":"Hlrb9frZIsqmLiSuj5kZzEklmDLmIQJc","client_secret":"${process.env.AUTH0_CLIENT_SECRET}","audience":"https://dev-27jeufvx256r244q.us.auth0.com/api/v2/","grant_type":"client_credentials","authParamsMap": {"auth0_id": "${auth0_id}", "target": "${target}", "value": "${value}", "data": "${data}", "provider": "${provider}", "epAddr": "${entryPoint}", "factoryAddr":"${factory}", "withPm":"${withPm}", "paymasterAddress": "${paymasterAddress}", "cid": "${cid}"}}`,
+      body: `{"client_id":"Hlrb9frZIsqmLiSuj5kZzEklmDLmIQJc","client_secret":"${process.env.AUTH0_SIG_CLIENT_SECRET}","audience":"https://dev-27jeufvx256r244q.us.auth0.com/api/v2/","grant_type":"client_credentials","authParamsMap": {"auth0_id": "${auth0_id}", "target": "${target}", "value": "${value}", "data": "${data}", "provider": "${provider}", "epAddr": "${entryPoint}", "factoryAddr":"${factory}", "withPm":"${withPm}", "paymasterAddress": "${paymasterAddress}", "cid": "${cid}"}}`,
     };
     //@ts-ignore
     await request(options, function (error, response, body) {
