@@ -1,6 +1,6 @@
 ![](https://i.imgur.com/i6jKHVH.png)
 
-https://ethglobal.com/showcase/novusys-paymaster-w2h9j
+[ETHGlobal Project Page](https://ethglobal.com/showcase/novusys-paymaster-w2h9j)
 
 ## Goal
 Allow users to pay for an entire transaction without having to buy crypto on the original chain. 
